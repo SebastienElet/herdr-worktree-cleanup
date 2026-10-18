@@ -1,7 +1,5 @@
 # Herdr Worktree Cleanup
 
-Version 1.0.0 is prepared locally; registry publication and native release qualification are pending.
-
 Remove an eligible linked Git worktree when its Herdr workspace closes. The plugin retains ID
 `dotfiles.worktree-cleanup`, event `workspace.closed` and Docker cleanup `off` by default.
 Git refuses dirty, untracked, locked and foreign checkouts; detached HEADs are preserved. Ignored
@@ -18,7 +16,7 @@ After publication and qualification, install in a durable directory:
 ```sh
 mkdir -p "$HOME/.local/share/herdr-worktree-cleanup"
 cd "$HOME/.local/share/herdr-worktree-cleanup"
-bun install --exact --ignore-scripts @sebastienelet/herdr-worktree-cleanup@1.0.0
+bun install --exact --ignore-scripts @sebastienelet/herdr-worktree-cleanup@1.0.1
 herdr plugin link "$PWD/node_modules/@sebastienelet/herdr-worktree-cleanup"
 ```
 
@@ -53,8 +51,7 @@ Git repositories and substitute Docker; they do not prove native Herdr event del
 No assembled native release has been qualified by this local preparation.
 
 The manual publication job in `ci.yml` on `main` uses only `npm publish --provenance` in CI with
-OIDC. Configure the npm trusted publisher against the future public repository
-`SebastienElet/herdr-worktree-cleanup`, workflow `ci.yml`; no token fallback is configured.
+OIDC; no token fallback is configured.
 See [npm trusted publishing](https://docs.npmjs.com/trusted-publishers/) and
 [Bun archive preparation](https://bun.sh/docs/pm/cli/pm#pack). After an unknown publication result,
 inspect the registry version, integrity and provenance before any retry; do not unpublish.

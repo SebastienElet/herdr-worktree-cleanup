@@ -1,6 +1,6 @@
 id = "dotfiles.worktree-cleanup"
 name = "Worktree Cleanup"
-version = "1.0.0"
+version = "1.0.1"
 min_herdr_version = "0.9.3"
 description = "Remove linked worktrees; set --docker-cleanup=stop to stop containers with an exact Compose working_dir label match"
 platforms = ["macos"]

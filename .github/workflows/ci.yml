@@ -48,4 +48,4 @@ jobs:
           package-manager-cache: false
       - run: bun install --frozen-lockfile --ignore-scripts
       - run: bun pm pack --ignore-scripts
-      - run: npm publish ./sebastienelet-herdr-worktree-cleanup-1.0.0.tgz --provenance --access public --registry https://registry.npmjs.org --ignore-scripts
+      - run: npm publish ./sebastienelet-herdr-worktree-cleanup-1.0.1.tgz --provenance --access public --registry https://registry.npmjs.org --ignore-scripts

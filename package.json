@@ -1,6 +1,6 @@
 {
   "name": "@sebastienelet/herdr-worktree-cleanup",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Conservative linked-worktree cleanup on Herdr workspace closure.",
   "license": "BSD-2-Clause",
   "repository": {
