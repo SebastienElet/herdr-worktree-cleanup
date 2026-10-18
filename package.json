@@ -1,0 +1,46 @@
+{
+  "name": "@sebastienelet/herdr-worktree-cleanup",
+  "version": "1.0.0",
+  "description": "Conservative linked-worktree cleanup on Herdr workspace closure.",
+  "license": "BSD-2-Clause",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SebastienElet/herdr-worktree-cleanup.git"
+  },
+  "files": [
+    "*.ts",
+    "herdr-plugin.toml"
+  ],
+  "os": [
+    "darwin"
+  ],
+  "cpu": [
+    "arm64"
+  ],
+  "type": "module",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
+  },
+  "scripts": {
+    "test": "bun --config=/dev/null --no-env-file test",
+    "typecheck": "tsc --noEmit",
+    "lint": "oxlint --type-aware --deny-warnings .",
+    "format": "oxfmt .",
+    "format:check": "oxfmt --check ."
+  },
+  "dependencies": {
+    "zod": "4.6.6"
+  },
+  "devDependencies": {
+    "@types/bun": "1.4.2",
+    "oxfmt": "0.72.0",
+    "oxlint": "1.87.0",
+    "oxlint-tsgolint": "7.0.2004",
+    "typescript": "7.0.2"
+  },
+  "engines": {
+    "bun": "1.4.3"
+  },
+  "packageManager": "bun@1.4.3"
+}
