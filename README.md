@@ -1,57 +1,46 @@
 # Herdr Worktree Cleanup
 
-Remove an eligible linked Git worktree when its Herdr workspace closes. The plugin retains ID
-`dotfiles.worktree-cleanup`, event `workspace.closed` and Docker cleanup `off` by default.
-Git refuses dirty, untracked, locked and foreign checkouts; detached HEADs are preserved. Ignored
-files can disappear with an otherwise clean checkout: lock any worktree used as a deployment source.
-Deleting a checkout preserves its branch; a rollback cannot recreate deleted files.
+Native Rust handler for Herdr `workspace.closed`, plugin ID `dotfiles.worktree-cleanup`.
+Git refuses dirty, untracked, locked and foreign checkouts. Detached HEADs and branches are
+preserved. Ignored files can disappear with an otherwise clean checkout: lock deployment sources.
 
-Target: macOS ARM64, Bun 1.4.3, Git and Herdr (declared minimum 0.9.3, not a qualification of all
-later versions). Docker is optional. The explicit `--docker-cleanup=stop` mode uses only container
-IDs returned for an exact Compose `working_dir` label match; Docker failures do not block closure.
-The issue launcher and its skill are independent and are not installed by this package.
+Target: macOS ARM64, Git, Herdr ≥0.9.3 (declared minimum, not qualification of later versions).
+Docker is optional: `--docker-cleanup=off` by default; `--docker-cleanup=stop` uses the exact Compose
+`working_dir` label. Docker failures and 15-second command timeouts do not block Git cleanup.
+
+Accepted parity exception: malformed `length` array coercion is limited to 4,096 nesting levels.
+Beyond that, the handler returns `failed: Maximum call stack size exceeded.` with exit code 1.
+This deterministic limit replaces Bun's runtime-dependent stack limit; JSON parsing is not capped by it.
 
 After publication and qualification, install in a durable directory:
 
 ```sh
 mkdir -p "$HOME/.local/share/herdr-worktree-cleanup"
 cd "$HOME/.local/share/herdr-worktree-cleanup"
-bun install --exact --ignore-scripts @sebastienelet/herdr-worktree-cleanup@1.0.1
-herdr plugin link "$PWD/node_modules/@sebastienelet/herdr-worktree-cleanup"
+npm install --save-exact --ignore-scripts @sebastienelet/herdr-worktree-cleanup@1.0.2
+herdr plugin link "$PWD/node_modules/@sebastienelet/herdr-worktree-cleanup-darwin-arm64"
 ```
 
-Keep the installation's manifest and Bun lockfile; reproduce it with
-`bun install --frozen-lockfile --ignore-scripts`. Never link a persistent plugin into a `bunx` cache.
-Installation runs no lifecycle scripts, cleanup or native handler.
+Keep the installation lockfile; reproduce with `npm ci --ignore-scripts`. The native package
+contains the Herdr manifest and binary; the main package exposes the Node ≥22.14.0 CLI launcher.
+The following switching procedure remains to be qualified in Herdr. Suspend closures and record
+`herdr plugin list`. Disable/unlink only the owned
+`dotfiles.worktree-cleanup` registration, then link the native package and test disposable worktrees.
+Maintain one active handler. Roll back by disabling/unlinking it and restoring the recorded installation;
+deleted ignored files cannot be recovered this way. Uninstall by disabling/unlinking before npm removal.
 
-For substitution, suspend workspace closures, record `herdr plugin list`, and inspect ownership.
-An existing different registration is a collision, not permission to overwrite it. Explicitly disable
-the old handler with `herdr plugin disable dotfiles.worktree-cleanup`, then remove only its owned
-registration with `herdr plugin unlink dotfiles.worktree-cleanup` before linking the new package.
-Keep exactly one handler active. Verify closure of a disposable clean worktree and preservation of
-dirty, locked, detached and foreign checkouts before removing old sources. Preserve unrelated
-configuration, data and worktrees. For rollback, disable/unlink the new registration and restore the
-recorded prior link or exact package. Uninstall with explicit disable/unlink, then
-`bun remove @sebastienelet/herdr-worktree-cleanup` in its installation directory; never close a
-workspace or delete data as an installation repair.
-
-For source contribution:
+Development (Rust toolchain pinned in `rust-toolchain.toml`):
 
 ```sh
-bun install --frozen-lockfile --ignore-scripts
-bun test
-bun run format:check
-bun run lint
-bun run typecheck
-bun pm pack --ignore-scripts
+cargo fmt --check
+cargo clippy --all-targets -- -D warnings
+cargo test
+npm run build
+npm test
+actionlint
 ```
 
-CI transfers the existing TypeScript checks and tests to macOS/Ubuntu. Tests exercise real disposable
-Git repositories and substitute Docker; they do not prove native Herdr event delivery or real Docker.
-No assembled native release has been qualified by this local preparation.
-
-The manual publication job in `ci.yml` on `main` uses only `npm publish --provenance` in CI with
-OIDC; no token fallback is configured.
-See [npm trusted publishing](https://docs.npmjs.com/trusted-publishers/) and
-[Bun archive preparation](https://bun.sh/docs/pm/cli/pm#pack). After an unknown publication result,
-inspect the registry version, integrity and provenance before any retry; do not unpublish.
+Tests use disposable Git repositories and substitute Docker. Native Herdr event delivery and real
+Docker are not covered. No npm publication or dotfiles migration is performed by these commands.
+The manual `main` workflow is configured to publish native then launcher with OIDC provenance after checks.
+See [distribution decision](docs/adr/0001-native-rust-distribution.md).

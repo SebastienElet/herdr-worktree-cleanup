@@ -1,0 +1,672 @@
+[
+  {
+    "input": "",
+    "stdout": "failed: JSON Parse error: Unexpected EOF\n",
+    "status": 1
+  },
+  {
+    "input": "not json",
+    "stdout": "failed: JSON Parse error: Unexpected identifier \"not\"\n",
+    "status": 1
+  },
+  {
+    "input": "{",
+    "stdout": "failed: JSON Parse error: Expected '}'\n",
+    "status": 1
+  },
+  {
+    "input": "[",
+    "stdout": "failed: JSON Parse error: Unexpected EOF\n",
+    "status": 1
+  },
+  {
+    "input": "t",
+    "stdout": "failed: JSON Parse error: Unexpected identifier \"t\"\n",
+    "status": 1
+  },
+  {
+    "input": "tru",
+    "stdout": "failed: JSON Parse error: Unexpected identifier \"tru\"\n",
+    "status": 1
+  },
+  {
+    "input": "truex",
+    "stdout": "failed: JSON Parse error: Unable to parse JSON string\n",
+    "status": 1
+  },
+  {
+    "input": "undefined",
+    "stdout": "failed: JSON Parse error: Unexpected identifier \"undefined\"\n",
+    "status": 1
+  },
+  {
+    "input": "-",
+    "stdout": "failed: JSON Parse error: Invalid number\n",
+    "status": 1
+  },
+  {
+    "input": "-x",
+    "stdout": "failed: JSON Parse error: Invalid number\n",
+    "status": 1
+  },
+  {
+    "input": "01",
+    "stdout": "failed: JSON Parse error: Unable to parse JSON string\n",
+    "status": 1
+  },
+  {
+    "input": "1.",
+    "stdout": "failed: JSON Parse error: Invalid digits after decimal point\n",
+    "status": 1
+  },
+  {
+    "input": "1.e2",
+    "stdout": "failed: JSON Parse error: Invalid digits after decimal point\n",
+    "status": 1
+  },
+  {
+    "input": "1e",
+    "stdout": "failed: JSON Parse error: Unable to parse JSON string\n",
+    "status": 1
+  },
+  {
+    "input": "1e+",
+    "stdout": "failed: JSON Parse error: Unable to parse JSON string\n",
+    "status": 1
+  },
+  {
+    "input": "+1",
+    "stdout": "failed: JSON Parse error: Unrecognized token '+'\n",
+    "status": 1
+  },
+  {
+    "input": ".1",
+    "stdout": "failed: JSON Parse error: Unexpected token '.'\n",
+    "status": 1
+  },
+  {
+    "input": "[1 2]",
+    "stdout": "failed: JSON Parse error: Expected ']'\n",
+    "status": 1
+  },
+  {
+    "input": "[1,",
+    "stdout": "failed: JSON Parse error: Unexpected EOF\n",
+    "status": 1
+  },
+  {
+    "input": "{\"a\"}",
+    "stdout": "failed: JSON Parse error: Expected ':' before value in object property definition\n",
+    "status": 1
+  },
+  {
+    "input": "{\"a\":",
+    "stdout": "failed: JSON Parse error: Unexpected EOF\n",
+    "status": 1
+  },
+  {
+    "input": "{\"a\":1",
+    "stdout": "failed: JSON Parse error: Expected '}'\n",
+    "status": 1
+  },
+  {
+    "input": "{\"a\":1 x}",
+    "stdout": "failed: JSON Parse error: Expected '}'\n",
+    "status": 1
+  },
+  {
+    "input": "\"abc",
+    "stdout": "failed: JSON Parse error: Unterminated string\n",
+    "status": 1
+  },
+  {
+    "input": "\"a\\q\"",
+    "stdout": "failed: JSON Parse error: Invalid escape character q\n",
+    "status": 1
+  },
+  {
+    "input": "\"a\\u12x4\"",
+    "stdout": "failed: JSON Parse error: \"\\u12x4\" is not a valid unicode escape\n",
+    "status": 1
+  },
+  {
+    "input": "\"a\n\"",
+    "stdout": "failed: JSON Parse error: Unterminated string\n",
+    "status": 1
+  },
+  {
+    "input": "/hi/",
+    "stdout": "failed: JSON Parse error: Unrecognized token '/'\n",
+    "status": 1
+  },
+  {
+    "input": ":",
+    "stdout": "failed: JSON Parse error: Unexpected token ':'\n",
+    "status": 1
+  },
+  {
+    "input": "}",
+    "stdout": "failed: JSON Parse error: Unexpected token '}'\n",
+    "status": 1
+  },
+  {
+    "input": "]",
+    "stdout": "failed: JSON Parse error: Unexpected token ']'\n",
+    "status": 1
+  },
+  {
+    "input": "{\"a\" 1}",
+    "stdout": "failed: JSON Parse error: Expected ':' before value in object property definition\n",
+    "status": 1
+  },
+  {
+    "input": "{\"a\":1,,}",
+    "stdout": "failed: JSON Parse error: Property name must be a string literal\n",
+    "status": 1
+  },
+  {
+    "input": "foo-bar",
+    "stdout": "failed: JSON Parse error: Unexpected identifier \"foo\"\n",
+    "status": 1
+  },
+  {
+    "input": "éé",
+    "stdout": "failed: JSON Parse error: Unrecognized token 'é'\n",
+    "status": 1
+  },
+  {
+    "input": "!",
+    "stdout": "failed: JSON Parse error: Unrecognized token '!'\n",
+    "status": 1
+  },
+  {
+    "input": "@",
+    "stdout": "failed: JSON Parse error: Unrecognized token '@'\n",
+    "status": 1
+  },
+  {
+    "input": "(",
+    "stdout": "failed: JSON Parse error: Unexpected token '('\n",
+    "status": 1
+  },
+  {
+    "input": ";",
+    "stdout": "failed: JSON Parse error: Unexpected token ';'\n",
+    "status": 1
+  },
+  {
+    "input": "=",
+    "stdout": "failed: JSON Parse error: Unexpected token '='\n",
+    "status": 1
+  },
+  {
+    "input": "\\",
+    "stdout": "failed: JSON Parse error: Unrecognized token '\\'\n",
+    "status": 1
+  },
+  {
+    "input": "﻿{}",
+    "stdout": "failed: JSON Parse error: Unrecognized token '﻿'\n",
+    "status": 1
+  },
+  {
+    "input": "\"\\u\"",
+    "stdout": "failed: JSON Parse error: \\u must be followed by 4 hex digits\n",
+    "status": 1
+  },
+  {
+    "input": "\"\\u12\"",
+    "stdout": "failed: JSON Parse error: \\u must be followed by 4 hex digits\n",
+    "status": 1
+  },
+  {
+    "input": "\"\\u123\"",
+    "stdout": "failed: JSON Parse error: \"\\u123\"\" is not a valid unicode escape\n",
+    "status": 1
+  },
+  {
+    "input": "\"\\uGGGG\"",
+    "stdout": "failed: JSON Parse error: \"\\uGGGG\" is not a valid unicode escape\n",
+    "status": 1
+  },
+  {
+    "input": "{\"a\":1,",
+    "stdout": "failed: JSON Parse error: Property name must be a string literal\n",
+    "status": 1
+  },
+  {
+    "input": "[,1]",
+    "stdout": "failed: JSON Parse error: Unexpected token ','\n",
+    "status": 1
+  },
+  {
+    "input": "{,}",
+    "stdout": "failed: JSON Parse error: Expected '}'\n",
+    "status": 1
+  },
+  {
+    "input": "[1,]",
+    "stdout": "failed: JSON Parse error: Unexpected comma at the end of array expression\n",
+    "status": 1
+  },
+  {
+    "input": "{\"a\":1,}",
+    "stdout": "failed: JSON Parse error: Property name must be a string literal\n",
+    "status": 1
+  },
+  {
+    "input": "true false",
+    "stdout": "failed: JSON Parse error: Unable to parse JSON string\n",
+    "status": 1
+  },
+  {
+    "input": "null",
+    "stdout": "failed: [\n  {\n    \"expected\": \"object\",\n    \"code\": \"invalid_type\",\n    \"path\": [],\n    \"message\": \"Invalid input: expected object, received null\"\n  }\n]\n",
+    "status": 1
+  },
+  {
+    "input": "1",
+    "stdout": "failed: [\n  {\n    \"expected\": \"object\",\n    \"code\": \"invalid_type\",\n    \"path\": [],\n    \"message\": \"Invalid input: expected object, received number\"\n  }\n]\n",
+    "status": 1
+  },
+  {
+    "input": "true",
+    "stdout": "failed: [\n  {\n    \"expected\": \"object\",\n    \"code\": \"invalid_type\",\n    \"path\": [],\n    \"message\": \"Invalid input: expected object, received boolean\"\n  }\n]\n",
+    "status": 1
+  },
+  {
+    "input": "\"x\"",
+    "stdout": "failed: [\n  {\n    \"expected\": \"object\",\n    \"code\": \"invalid_type\",\n    \"path\": [],\n    \"message\": \"Invalid input: expected object, received string\"\n  }\n]\n",
+    "status": 1
+  },
+  {
+    "input": "[]",
+    "stdout": "failed: [\n  {\n    \"expected\": \"object\",\n    \"code\": \"invalid_type\",\n    \"path\": [],\n    \"message\": \"Invalid input: expected object, received array\"\n  }\n]\n",
+    "status": 1
+  },
+  {
+    "input": "{}",
+    "stdout": "failed: [\n  {\n    \"expected\": \"object\",\n    \"code\": \"invalid_type\",\n    \"path\": [\n      \"data\"\n    ],\n    \"message\": \"Invalid input: expected object, received undefined\"\n  }\n]\n",
+    "status": 1
+  },
+  {
+    "input": "{\"data\":null}",
+    "stdout": "failed: [\n  {\n    \"expected\": \"object\",\n    \"code\": \"invalid_type\",\n    \"path\": [\n      \"data\"\n    ],\n    \"message\": \"Invalid input: expected object, received null\"\n  }\n]\n",
+    "status": 1
+  },
+  {
+    "input": "{\"data\":[]}",
+    "stdout": "failed: [\n  {\n    \"expected\": \"object\",\n    \"code\": \"invalid_type\",\n    \"path\": [\n      \"data\"\n    ],\n    \"message\": \"Invalid input: expected object, received array\"\n  }\n]\n",
+    "status": 1
+  },
+  {
+    "input": "{\"data\":{}}",
+    "stdout": "skipped: event carries no worktree snapshot\n",
+    "status": 0
+  },
+  {
+    "input": "{\"data\":{\"workspace\":{}}}",
+    "stdout": "skipped: event carries no worktree snapshot\n",
+    "status": 0
+  },
+  {
+    "input": "{\"data\":{\"workspace\":null}}",
+    "stdout": "failed: [\n  {\n    \"expected\": \"object\",\n    \"code\": \"invalid_type\",\n    \"path\": [\n      \"data\",\n      \"workspace\"\n    ],\n    \"message\": \"Invalid input: expected object, received null\"\n  }\n]\n",
+    "status": 1
+  },
+  {
+    "input": "{\"data\":{\"workspace\":[]}}",
+    "stdout": "failed: [\n  {\n    \"expected\": \"object\",\n    \"code\": \"invalid_type\",\n    \"path\": [\n      \"data\",\n      \"workspace\"\n    ],\n    \"message\": \"Invalid input: expected object, received array\"\n  }\n]\n",
+    "status": 1
+  },
+  {
+    "input": "{\"data\":{\"workspace\":{\"worktree\":null}}}",
+    "stdout": "failed: [\n  {\n    \"expected\": \"object\",\n    \"code\": \"invalid_type\",\n    \"path\": [\n      \"data\",\n      \"workspace\",\n      \"worktree\"\n    ],\n    \"message\": \"Invalid input: expected object, received null\"\n  }\n]\n",
+    "status": 1
+  },
+  {
+    "input": "{\"data\":{\"workspace\":{\"worktree\":[]}}}",
+    "stdout": "failed: [\n  {\n    \"expected\": \"object\",\n    \"code\": \"invalid_type\",\n    \"path\": [\n      \"data\",\n      \"workspace\",\n      \"worktree\"\n    ],\n    \"message\": \"Invalid input: expected object, received array\"\n  }\n]\n",
+    "status": 1
+  },
+  {
+    "input": "{\"data\":{\"workspace\":{\"worktree\":{}}}}",
+    "stdout": "failed: [\n  {\n    \"expected\": \"string\",\n    \"code\": \"invalid_type\",\n    \"path\": [\n      \"data\",\n      \"workspace\",\n      \"worktree\",\n      \"checkout_path\"\n    ],\n    \"message\": \"Invalid input: expected string, received undefined\"\n  },\n  {\n    \"expected\": \"boolean\",\n    \"code\": \"invalid_type\",\n    \"path\": [\n      \"data\",\n      \"workspace\",\n      \"worktree\",\n      \"is_linked_worktree\"\n    ],\n    \"message\": \"Invalid input: expected boolean, received undefined\"\n  },\n  {\n    \"expected\": \"string\",\n    \"code\": \"invalid_type\",\n    \"path\": [\n      \"data\",\n      \"workspace\",\n      \"worktree\",\n      \"repo_root\"\n    ],\n    \"message\": \"Invalid input: expected string, received undefined\"\n  }\n]\n",
+    "status": 1
+  },
+  {
+    "input": "{\"data\":{\"workspace\":{\"worktree\":{\"checkout_path\":null,\"is_linked_worktree\":false,\"repo_root\":\"/repo\"}}}}",
+    "stdout": "failed: [\n  {\n    \"expected\": \"string\",\n    \"code\": \"invalid_type\",\n    \"path\": [\n      \"data\",\n      \"workspace\",\n      \"worktree\",\n      \"checkout_path\"\n    ],\n    \"message\": \"Invalid input: expected string, received null\"\n  }\n]\n",
+    "status": 1
+  },
+  {
+    "input": "{\"data\":{\"workspace\":{\"worktree\":{\"checkout_path\":0,\"is_linked_worktree\":false,\"repo_root\":\"/repo\"}}}}",
+    "stdout": "failed: [\n  {\n    \"expected\": \"string\",\n    \"code\": \"invalid_type\",\n    \"path\": [\n      \"data\",\n      \"workspace\",\n      \"worktree\",\n      \"checkout_path\"\n    ],\n    \"message\": \"Invalid input: expected string, received number\"\n  }\n]\n",
+    "status": 1
+  },
+  {
+    "input": "{\"data\":{\"workspace\":{\"worktree\":{\"checkout_path\":false,\"is_linked_worktree\":false,\"repo_root\":\"/repo\"}}}}",
+    "stdout": "failed: [\n  {\n    \"expected\": \"string\",\n    \"code\": \"invalid_type\",\n    \"path\": [\n      \"data\",\n      \"workspace\",\n      \"worktree\",\n      \"checkout_path\"\n    ],\n    \"message\": \"Invalid input: expected string, received boolean\"\n  }\n]\n",
+    "status": 1
+  },
+  {
+    "input": "{\"data\":{\"workspace\":{\"worktree\":{\"checkout_path\":\"\",\"is_linked_worktree\":false,\"repo_root\":\"/repo\"}}}}",
+    "stdout": "failed: [\n  {\n    \"origin\": \"string\",\n    \"code\": \"too_small\",\n    \"minimum\": 1,\n    \"inclusive\": true,\n    \"path\": [\n      \"data\",\n      \"workspace\",\n      \"worktree\",\n      \"checkout_path\"\n    ],\n    \"message\": \"Too small: expected string to have >=1 characters\"\n  }\n]\n",
+    "status": 1
+  },
+  {
+    "input": "{\"data\":{\"workspace\":{\"worktree\":{\"checkout_path\":[],\"is_linked_worktree\":false,\"repo_root\":\"/repo\"}}}}",
+    "stdout": "failed: [\n  {\n    \"expected\": \"string\",\n    \"code\": \"invalid_type\",\n    \"path\": [\n      \"data\",\n      \"workspace\",\n      \"worktree\",\n      \"checkout_path\"\n    ],\n    \"message\": \"Invalid input: expected string, received array\"\n  },\n  {\n    \"origin\": \"array\",\n    \"code\": \"too_small\",\n    \"minimum\": 1,\n    \"inclusive\": true,\n    \"path\": [\n      \"data\",\n      \"workspace\",\n      \"worktree\",\n      \"checkout_path\"\n    ],\n    \"message\": \"Too small: expected array to have >=1 items\"\n  }\n]\n",
+    "status": 1
+  },
+  {
+    "input": "{\"data\":{\"workspace\":{\"worktree\":{\"checkout_path\":{},\"is_linked_worktree\":false,\"repo_root\":\"/repo\"}}}}",
+    "stdout": "failed: [\n  {\n    \"expected\": \"string\",\n    \"code\": \"invalid_type\",\n    \"path\": [\n      \"data\",\n      \"workspace\",\n      \"worktree\",\n      \"checkout_path\"\n    ],\n    \"message\": \"Invalid input: expected string, received object\"\n  }\n]\n",
+    "status": 1
+  },
+  {
+    "input": "{\"data\":{\"workspace\":{\"worktree\":{\"checkout_path\":\"/gone\",\"is_linked_worktree\":null,\"repo_root\":\"/repo\"}}}}",
+    "stdout": "failed: [\n  {\n    \"expected\": \"boolean\",\n    \"code\": \"invalid_type\",\n    \"path\": [\n      \"data\",\n      \"workspace\",\n      \"worktree\",\n      \"is_linked_worktree\"\n    ],\n    \"message\": \"Invalid input: expected boolean, received null\"\n  }\n]\n",
+    "status": 1
+  },
+  {
+    "input": "{\"data\":{\"workspace\":{\"worktree\":{\"checkout_path\":\"/gone\",\"is_linked_worktree\":0,\"repo_root\":\"/repo\"}}}}",
+    "stdout": "failed: [\n  {\n    \"expected\": \"boolean\",\n    \"code\": \"invalid_type\",\n    \"path\": [\n      \"data\",\n      \"workspace\",\n      \"worktree\",\n      \"is_linked_worktree\"\n    ],\n    \"message\": \"Invalid input: expected boolean, received number\"\n  }\n]\n",
+    "status": 1
+  },
+  {
+    "input": "{\"data\":{\"workspace\":{\"worktree\":{\"checkout_path\":\"/gone\",\"is_linked_worktree\":false,\"repo_root\":\"/repo\"}}}}",
+    "stdout": "skipped: workspace is not a linked worktree\n",
+    "status": 0
+  },
+  {
+    "input": "{\"data\":{\"workspace\":{\"worktree\":{\"checkout_path\":\"/gone\",\"is_linked_worktree\":\"\",\"repo_root\":\"/repo\"}}}}",
+    "stdout": "failed: [\n  {\n    \"expected\": \"boolean\",\n    \"code\": \"invalid_type\",\n    \"path\": [\n      \"data\",\n      \"workspace\",\n      \"worktree\",\n      \"is_linked_worktree\"\n    ],\n    \"message\": \"Invalid input: expected boolean, received string\"\n  }\n]\n",
+    "status": 1
+  },
+  {
+    "input": "{\"data\":{\"workspace\":{\"worktree\":{\"checkout_path\":\"/gone\",\"is_linked_worktree\":[],\"repo_root\":\"/repo\"}}}}",
+    "stdout": "failed: [\n  {\n    \"expected\": \"boolean\",\n    \"code\": \"invalid_type\",\n    \"path\": [\n      \"data\",\n      \"workspace\",\n      \"worktree\",\n      \"is_linked_worktree\"\n    ],\n    \"message\": \"Invalid input: expected boolean, received array\"\n  }\n]\n",
+    "status": 1
+  },
+  {
+    "input": "{\"data\":{\"workspace\":{\"worktree\":{\"checkout_path\":\"/gone\",\"is_linked_worktree\":{},\"repo_root\":\"/repo\"}}}}",
+    "stdout": "failed: [\n  {\n    \"expected\": \"boolean\",\n    \"code\": \"invalid_type\",\n    \"path\": [\n      \"data\",\n      \"workspace\",\n      \"worktree\",\n      \"is_linked_worktree\"\n    ],\n    \"message\": \"Invalid input: expected boolean, received object\"\n  }\n]\n",
+    "status": 1
+  },
+  {
+    "input": "{\"data\":{\"workspace\":{\"worktree\":{\"checkout_path\":\"/gone\",\"is_linked_worktree\":false,\"repo_root\":null}}}}",
+    "stdout": "failed: [\n  {\n    \"expected\": \"string\",\n    \"code\": \"invalid_type\",\n    \"path\": [\n      \"data\",\n      \"workspace\",\n      \"worktree\",\n      \"repo_root\"\n    ],\n    \"message\": \"Invalid input: expected string, received null\"\n  }\n]\n",
+    "status": 1
+  },
+  {
+    "input": "{\"data\":{\"workspace\":{\"worktree\":{\"checkout_path\":\"/gone\",\"is_linked_worktree\":false,\"repo_root\":0}}}}",
+    "stdout": "failed: [\n  {\n    \"expected\": \"string\",\n    \"code\": \"invalid_type\",\n    \"path\": [\n      \"data\",\n      \"workspace\",\n      \"worktree\",\n      \"repo_root\"\n    ],\n    \"message\": \"Invalid input: expected string, received number\"\n  }\n]\n",
+    "status": 1
+  },
+  {
+    "input": "{\"data\":{\"workspace\":{\"worktree\":{\"checkout_path\":\"/gone\",\"is_linked_worktree\":false,\"repo_root\":false}}}}",
+    "stdout": "failed: [\n  {\n    \"expected\": \"string\",\n    \"code\": \"invalid_type\",\n    \"path\": [\n      \"data\",\n      \"workspace\",\n      \"worktree\",\n      \"repo_root\"\n    ],\n    \"message\": \"Invalid input: expected string, received boolean\"\n  }\n]\n",
+    "status": 1
+  },
+  {
+    "input": "{\"data\":{\"workspace\":{\"worktree\":{\"checkout_path\":\"/gone\",\"is_linked_worktree\":false,\"repo_root\":\"\"}}}}",
+    "stdout": "failed: [\n  {\n    \"origin\": \"string\",\n    \"code\": \"too_small\",\n    \"minimum\": 1,\n    \"inclusive\": true,\n    \"path\": [\n      \"data\",\n      \"workspace\",\n      \"worktree\",\n      \"repo_root\"\n    ],\n    \"message\": \"Too small: expected string to have >=1 characters\"\n  }\n]\n",
+    "status": 1
+  },
+  {
+    "input": "{\"data\":{\"workspace\":{\"worktree\":{\"checkout_path\":\"/gone\",\"is_linked_worktree\":false,\"repo_root\":[]}}}}",
+    "stdout": "failed: [\n  {\n    \"expected\": \"string\",\n    \"code\": \"invalid_type\",\n    \"path\": [\n      \"data\",\n      \"workspace\",\n      \"worktree\",\n      \"repo_root\"\n    ],\n    \"message\": \"Invalid input: expected string, received array\"\n  },\n  {\n    \"origin\": \"array\",\n    \"code\": \"too_small\",\n    \"minimum\": 1,\n    \"inclusive\": true,\n    \"path\": [\n      \"data\",\n      \"workspace\",\n      \"worktree\",\n      \"repo_root\"\n    ],\n    \"message\": \"Too small: expected array to have >=1 items\"\n  }\n]\n",
+    "status": 1
+  },
+  {
+    "input": "{\"data\":{\"workspace\":{\"worktree\":{\"checkout_path\":\"/gone\",\"is_linked_worktree\":false,\"repo_root\":{}}}}}",
+    "stdout": "failed: [\n  {\n    \"expected\": \"string\",\n    \"code\": \"invalid_type\",\n    \"path\": [\n      \"data\",\n      \"workspace\",\n      \"worktree\",\n      \"repo_root\"\n    ],\n    \"message\": \"Invalid input: expected string, received object\"\n  }\n]\n",
+    "status": 1
+  },
+  {
+    "input": "1e999",
+    "stdout": "failed: [\n  {\n    \"expected\": \"object\",\n    \"code\": \"invalid_type\",\n    \"path\": [],\n    \"message\": \"Invalid input: expected object, received Infinity\"\n  }\n]\n",
+    "status": 1
+  },
+  {
+    "input": "-1e999",
+    "stdout": "failed: [\n  {\n    \"expected\": \"object\",\n    \"code\": \"invalid_type\",\n    \"path\": [],\n    \"message\": \"Invalid input: expected object, received -Infinity\"\n  }\n]\n",
+    "status": 1
+  },
+  {
+    "input": "\"\\uD800\"",
+    "stdout": "failed: [\n  {\n    \"expected\": \"object\",\n    \"code\": \"invalid_type\",\n    \"path\": [],\n    \"message\": \"Invalid input: expected object, received string\"\n  }\n]\n",
+    "status": 1
+  },
+  {
+    "input": "{\"data\":{},\"data\":null}",
+    "stdout": "failed: [\n  {\n    \"expected\": \"object\",\n    \"code\": \"invalid_type\",\n    \"path\": [\n      \"data\"\n    ],\n    \"message\": \"Invalid input: expected object, received null\"\n  }\n]\n",
+    "status": 1
+  },
+  {
+    "input": "{\"data\":null,\"data\":{}}",
+    "stdout": "skipped: event carries no worktree snapshot\n",
+    "status": 0
+  },
+  {
+    "input": "{\"extra\":1e999,\"data\":{}}",
+    "stdout": "skipped: event carries no worktree snapshot\n",
+    "status": 0
+  },
+  {
+    "input": "{\"extra\":\"\\uD800\",\"data\":{}}",
+    "stdout": "skipped: event carries no worktree snapshot\n",
+    "status": 0
+  },
+  {
+    "input": "\"\\u+123\"",
+    "stdout": "failed: JSON Parse error: \"\\u+123\" is not a valid unicode escape\n",
+    "status": 1
+  },
+  {
+    "input": "'x'",
+    "stdout": "failed: JSON Parse error: Single quotes (') are not allowed in JSON\n",
+    "status": 1
+  },
+  {
+    "input": "{\"a\":1e}",
+    "stdout": "failed: JSON Parse error: Expected '}'\n",
+    "status": 1
+  },
+  {
+    "input": "[1e]",
+    "stdout": "failed: JSON Parse error: Expected ']'\n",
+    "status": 1
+  },
+  {
+    "input": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "stdout": "failed: JSON Parse error: Unexpected identifier \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa...\"\n",
+    "status": 1
+  },
+  {
+    "input": "{\"data\":{\"workspace\":{\"worktree\":{\"checkout_path\":[],\"repo_root\":[],\"is_linked_worktree\":false}}}}",
+    "stdout": "failed: [\n  {\n    \"expected\": \"string\",\n    \"code\": \"invalid_type\",\n    \"path\": [\n      \"data\",\n      \"workspace\",\n      \"worktree\",\n      \"checkout_path\"\n    ],\n    \"message\": \"Invalid input: expected string, received array\"\n  },\n  {\n    \"origin\": \"array\",\n    \"code\": \"too_small\",\n    \"minimum\": 1,\n    \"inclusive\": true,\n    \"path\": [\n      \"data\",\n      \"workspace\",\n      \"worktree\",\n      \"checkout_path\"\n    ],\n    \"message\": \"Too small: expected array to have >=1 items\"\n  },\n  {\n    \"expected\": \"string\",\n    \"code\": \"invalid_type\",\n    \"path\": [\n      \"data\",\n      \"workspace\",\n      \"worktree\",\n      \"repo_root\"\n    ],\n    \"message\": \"Invalid input: expected string, received array\"\n  },\n  {\n    \"origin\": \"array\",\n    \"code\": \"too_small\",\n    \"minimum\": 1,\n    \"inclusive\": true,\n    \"path\": [\n      \"data\",\n      \"workspace\",\n      \"worktree\",\n      \"repo_root\"\n    ],\n    \"message\": \"Too small: expected array to have >=1 items\"\n  }\n]\n",
+    "status": 1
+  },
+  {
+    "input": "{\"data\":{\"workspace\":{\"worktree\":{\"checkout_path\":[1],\"repo_root\":[1],\"is_linked_worktree\":false}}}}",
+    "stdout": "failed: [\n  {\n    \"expected\": \"string\",\n    \"code\": \"invalid_type\",\n    \"path\": [\n      \"data\",\n      \"workspace\",\n      \"worktree\",\n      \"checkout_path\"\n    ],\n    \"message\": \"Invalid input: expected string, received array\"\n  },\n  {\n    \"expected\": \"string\",\n    \"code\": \"invalid_type\",\n    \"path\": [\n      \"data\",\n      \"workspace\",\n      \"worktree\",\n      \"repo_root\"\n    ],\n    \"message\": \"Invalid input: expected string, received array\"\n  }\n]\n",
+    "status": 1
+  },
+  {
+    "input": "{\"data\":{\"workspace\":{\"worktree\":{\"checkout_path\":{\"length\":0},\"repo_root\":{\"length\":0},\"is_linked_worktree\":false}}}}",
+    "stdout": "failed: [\n  {\n    \"expected\": \"string\",\n    \"code\": \"invalid_type\",\n    \"path\": [\n      \"data\",\n      \"workspace\",\n      \"worktree\",\n      \"checkout_path\"\n    ],\n    \"message\": \"Invalid input: expected string, received object\"\n  },\n  {\n    \"origin\": \"unknown\",\n    \"code\": \"too_small\",\n    \"minimum\": 1,\n    \"inclusive\": true,\n    \"path\": [\n      \"data\",\n      \"workspace\",\n      \"worktree\",\n      \"checkout_path\"\n    ],\n    \"message\": \"Too small: expected unknown to be >=1\"\n  },\n  {\n    \"expected\": \"string\",\n    \"code\": \"invalid_type\",\n    \"path\": [\n      \"data\",\n      \"workspace\",\n      \"worktree\",\n      \"repo_root\"\n    ],\n    \"message\": \"Invalid input: expected string, received object\"\n  },\n  {\n    \"origin\": \"unknown\",\n    \"code\": \"too_small\",\n    \"minimum\": 1,\n    \"inclusive\": true,\n    \"path\": [\n      \"data\",\n      \"workspace\",\n      \"worktree\",\n      \"repo_root\"\n    ],\n    \"message\": \"Too small: expected unknown to be >=1\"\n  }\n]\n",
+    "status": 1
+  },
+  {
+    "input": "{\"data\":{\"workspace\":{\"worktree\":{\"checkout_path\":{\"length\":-1},\"repo_root\":{\"length\":-1},\"is_linked_worktree\":false}}}}",
+    "stdout": "failed: [\n  {\n    \"expected\": \"string\",\n    \"code\": \"invalid_type\",\n    \"path\": [\n      \"data\",\n      \"workspace\",\n      \"worktree\",\n      \"checkout_path\"\n    ],\n    \"message\": \"Invalid input: expected string, received object\"\n  },\n  {\n    \"origin\": \"unknown\",\n    \"code\": \"too_small\",\n    \"minimum\": 1,\n    \"inclusive\": true,\n    \"path\": [\n      \"data\",\n      \"workspace\",\n      \"worktree\",\n      \"checkout_path\"\n    ],\n    \"message\": \"Too small: expected unknown to be >=1\"\n  },\n  {\n    \"expected\": \"string\",\n    \"code\": \"invalid_type\",\n    \"path\": [\n      \"data\",\n      \"workspace\",\n      \"worktree\",\n      \"repo_root\"\n    ],\n    \"message\": \"Invalid input: expected string, received object\"\n  },\n  {\n    \"origin\": \"unknown\",\n    \"code\": \"too_small\",\n    \"minimum\": 1,\n    \"inclusive\": true,\n    \"path\": [\n      \"data\",\n      \"workspace\",\n      \"worktree\",\n      \"repo_root\"\n    ],\n    \"message\": \"Too small: expected unknown to be >=1\"\n  }\n]\n",
+    "status": 1
+  },
+  {
+    "input": "{\"data\":{\"workspace\":{\"worktree\":{\"checkout_path\":{\"length\":0.5},\"repo_root\":{\"length\":0.5},\"is_linked_worktree\":false}}}}",
+    "stdout": "failed: [\n  {\n    \"expected\": \"string\",\n    \"code\": \"invalid_type\",\n    \"path\": [\n      \"data\",\n      \"workspace\",\n      \"worktree\",\n      \"checkout_path\"\n    ],\n    \"message\": \"Invalid input: expected string, received object\"\n  },\n  {\n    \"origin\": \"unknown\",\n    \"code\": \"too_small\",\n    \"minimum\": 1,\n    \"inclusive\": true,\n    \"path\": [\n      \"data\",\n      \"workspace\",\n      \"worktree\",\n      \"checkout_path\"\n    ],\n    \"message\": \"Too small: expected unknown to be >=1\"\n  },\n  {\n    \"expected\": \"string\",\n    \"code\": \"invalid_type\",\n    \"path\": [\n      \"data\",\n      \"workspace\",\n      \"worktree\",\n      \"repo_root\"\n    ],\n    \"message\": \"Invalid input: expected string, received object\"\n  },\n  {\n    \"origin\": \"unknown\",\n    \"code\": \"too_small\",\n    \"minimum\": 1,\n    \"inclusive\": true,\n    \"path\": [\n      \"data\",\n      \"workspace\",\n      \"worktree\",\n      \"repo_root\"\n    ],\n    \"message\": \"Too small: expected unknown to be >=1\"\n  }\n]\n",
+    "status": 1
+  },
+  {
+    "input": "{\"data\":{\"workspace\":{\"worktree\":{\"checkout_path\":{\"length\":1},\"repo_root\":{\"length\":1},\"is_linked_worktree\":false}}}}",
+    "stdout": "failed: [\n  {\n    \"expected\": \"string\",\n    \"code\": \"invalid_type\",\n    \"path\": [\n      \"data\",\n      \"workspace\",\n      \"worktree\",\n      \"checkout_path\"\n    ],\n    \"message\": \"Invalid input: expected string, received object\"\n  },\n  {\n    \"expected\": \"string\",\n    \"code\": \"invalid_type\",\n    \"path\": [\n      \"data\",\n      \"workspace\",\n      \"worktree\",\n      \"repo_root\"\n    ],\n    \"message\": \"Invalid input: expected string, received object\"\n  }\n]\n",
+    "status": 1
+  },
+  {
+    "input": "{\"data\":{\"workspace\":{\"worktree\":{\"checkout_path\":{\"length\":\"0\"},\"repo_root\":{\"length\":\"0\"},\"is_linked_worktree\":false}}}}",
+    "stdout": "failed: [\n  {\n    \"expected\": \"string\",\n    \"code\": \"invalid_type\",\n    \"path\": [\n      \"data\",\n      \"workspace\",\n      \"worktree\",\n      \"checkout_path\"\n    ],\n    \"message\": \"Invalid input: expected string, received object\"\n  },\n  {\n    \"origin\": \"unknown\",\n    \"code\": \"too_small\",\n    \"minimum\": 1,\n    \"inclusive\": true,\n    \"path\": [\n      \"data\",\n      \"workspace\",\n      \"worktree\",\n      \"checkout_path\"\n    ],\n    \"message\": \"Too small: expected unknown to be >=1\"\n  },\n  {\n    \"expected\": \"string\",\n    \"code\": \"invalid_type\",\n    \"path\": [\n      \"data\",\n      \"workspace\",\n      \"worktree\",\n      \"repo_root\"\n    ],\n    \"message\": \"Invalid input: expected string, received object\"\n  },\n  {\n    \"origin\": \"unknown\",\n    \"code\": \"too_small\",\n    \"minimum\": 1,\n    \"inclusive\": true,\n    \"path\": [\n      \"data\",\n      \"workspace\",\n      \"worktree\",\n      \"repo_root\"\n    ],\n    \"message\": \"Too small: expected unknown to be >=1\"\n  }\n]\n",
+    "status": 1
+  },
+  {
+    "input": "{\"data\":{\"workspace\":{\"worktree\":{\"checkout_path\":{\"length\":null},\"repo_root\":{\"length\":null},\"is_linked_worktree\":false}}}}",
+    "stdout": "failed: [\n  {\n    \"expected\": \"string\",\n    \"code\": \"invalid_type\",\n    \"path\": [\n      \"data\",\n      \"workspace\",\n      \"worktree\",\n      \"checkout_path\"\n    ],\n    \"message\": \"Invalid input: expected string, received object\"\n  },\n  {\n    \"origin\": \"unknown\",\n    \"code\": \"too_small\",\n    \"minimum\": 1,\n    \"inclusive\": true,\n    \"path\": [\n      \"data\",\n      \"workspace\",\n      \"worktree\",\n      \"checkout_path\"\n    ],\n    \"message\": \"Too small: expected unknown to be >=1\"\n  },\n  {\n    \"expected\": \"string\",\n    \"code\": \"invalid_type\",\n    \"path\": [\n      \"data\",\n      \"workspace\",\n      \"worktree\",\n      \"repo_root\"\n    ],\n    \"message\": \"Invalid input: expected string, received object\"\n  },\n  {\n    \"origin\": \"unknown\",\n    \"code\": \"too_small\",\n    \"minimum\": 1,\n    \"inclusive\": true,\n    \"path\": [\n      \"data\",\n      \"workspace\",\n      \"worktree\",\n      \"repo_root\"\n    ],\n    \"message\": \"Too small: expected unknown to be >=1\"\n  }\n]\n",
+    "status": 1
+  },
+  {
+    "input": "{\"data\":{\"workspace\":{\"worktree\":{\"checkout_path\":{\"length\":null},\"repo_root\":\"/repo\",\"is_linked_worktree\":false}}}}",
+    "stdout": "failed: [\n  {\n    \"expected\": \"string\",\n    \"code\": \"invalid_type\",\n    \"path\": [\n      \"data\",\n      \"workspace\",\n      \"worktree\",\n      \"checkout_path\"\n    ],\n    \"message\": \"Invalid input: expected string, received object\"\n  },\n  {\n    \"origin\": \"unknown\",\n    \"code\": \"too_small\",\n    \"minimum\": 1,\n    \"inclusive\": true,\n    \"path\": [\n      \"data\",\n      \"workspace\",\n      \"worktree\",\n      \"checkout_path\"\n    ],\n    \"message\": \"Too small: expected unknown to be >=1\"\n  }\n]\n",
+    "status": 1
+  },
+  {
+    "input": "{\"data\":{\"workspace\":{\"worktree\":{\"checkout_path\":{\"length\":false},\"repo_root\":\"/repo\",\"is_linked_worktree\":false}}}}",
+    "stdout": "failed: [\n  {\n    \"expected\": \"string\",\n    \"code\": \"invalid_type\",\n    \"path\": [\n      \"data\",\n      \"workspace\",\n      \"worktree\",\n      \"checkout_path\"\n    ],\n    \"message\": \"Invalid input: expected string, received object\"\n  },\n  {\n    \"origin\": \"unknown\",\n    \"code\": \"too_small\",\n    \"minimum\": 1,\n    \"inclusive\": true,\n    \"path\": [\n      \"data\",\n      \"workspace\",\n      \"worktree\",\n      \"checkout_path\"\n    ],\n    \"message\": \"Too small: expected unknown to be >=1\"\n  }\n]\n",
+    "status": 1
+  },
+  {
+    "input": "{\"data\":{\"workspace\":{\"worktree\":{\"checkout_path\":{\"length\":true},\"repo_root\":\"/repo\",\"is_linked_worktree\":false}}}}",
+    "stdout": "failed: [\n  {\n    \"expected\": \"string\",\n    \"code\": \"invalid_type\",\n    \"path\": [\n      \"data\",\n      \"workspace\",\n      \"worktree\",\n      \"checkout_path\"\n    ],\n    \"message\": \"Invalid input: expected string, received object\"\n  }\n]\n",
+    "status": 1
+  },
+  {
+    "input": "{\"data\":{\"workspace\":{\"worktree\":{\"checkout_path\":{\"length\":\"0\"},\"repo_root\":\"/repo\",\"is_linked_worktree\":false}}}}",
+    "stdout": "failed: [\n  {\n    \"expected\": \"string\",\n    \"code\": \"invalid_type\",\n    \"path\": [\n      \"data\",\n      \"workspace\",\n      \"worktree\",\n      \"checkout_path\"\n    ],\n    \"message\": \"Invalid input: expected string, received object\"\n  },\n  {\n    \"origin\": \"unknown\",\n    \"code\": \"too_small\",\n    \"minimum\": 1,\n    \"inclusive\": true,\n    \"path\": [\n      \"data\",\n      \"workspace\",\n      \"worktree\",\n      \"checkout_path\"\n    ],\n    \"message\": \"Too small: expected unknown to be >=1\"\n  }\n]\n",
+    "status": 1
+  },
+  {
+    "input": "{\"data\":{\"workspace\":{\"worktree\":{\"checkout_path\":{\"length\":\"1\"},\"repo_root\":\"/repo\",\"is_linked_worktree\":false}}}}",
+    "stdout": "failed: [\n  {\n    \"expected\": \"string\",\n    \"code\": \"invalid_type\",\n    \"path\": [\n      \"data\",\n      \"workspace\",\n      \"worktree\",\n      \"checkout_path\"\n    ],\n    \"message\": \"Invalid input: expected string, received object\"\n  }\n]\n",
+    "status": 1
+  },
+  {
+    "input": "{\"data\":{\"workspace\":{\"worktree\":{\"checkout_path\":{\"length\":\"bad\"},\"repo_root\":\"/repo\",\"is_linked_worktree\":false}}}}",
+    "stdout": "failed: [\n  {\n    \"expected\": \"string\",\n    \"code\": \"invalid_type\",\n    \"path\": [\n      \"data\",\n      \"workspace\",\n      \"worktree\",\n      \"checkout_path\"\n    ],\n    \"message\": \"Invalid input: expected string, received object\"\n  },\n  {\n    \"origin\": \"unknown\",\n    \"code\": \"too_small\",\n    \"minimum\": 1,\n    \"inclusive\": true,\n    \"path\": [\n      \"data\",\n      \"workspace\",\n      \"worktree\",\n      \"checkout_path\"\n    ],\n    \"message\": \"Too small: expected unknown to be >=1\"\n  }\n]\n",
+    "status": 1
+  },
+  {
+    "input": "{\"data\":{\"workspace\":{\"worktree\":{\"checkout_path\":{\"length\":\"inf\"},\"repo_root\":\"/repo\",\"is_linked_worktree\":false}}}}",
+    "stdout": "failed: [\n  {\n    \"expected\": \"string\",\n    \"code\": \"invalid_type\",\n    \"path\": [\n      \"data\",\n      \"workspace\",\n      \"worktree\",\n      \"checkout_path\"\n    ],\n    \"message\": \"Invalid input: expected string, received object\"\n  },\n  {\n    \"origin\": \"unknown\",\n    \"code\": \"too_small\",\n    \"minimum\": 1,\n    \"inclusive\": true,\n    \"path\": [\n      \"data\",\n      \"workspace\",\n      \"worktree\",\n      \"checkout_path\"\n    ],\n    \"message\": \"Too small: expected unknown to be >=1\"\n  }\n]\n",
+    "status": 1
+  },
+  {
+    "input": "{\"data\":{\"workspace\":{\"worktree\":{\"checkout_path\":{\"length\":[]},\"repo_root\":\"/repo\",\"is_linked_worktree\":false}}}}",
+    "stdout": "failed: [\n  {\n    \"expected\": \"string\",\n    \"code\": \"invalid_type\",\n    \"path\": [\n      \"data\",\n      \"workspace\",\n      \"worktree\",\n      \"checkout_path\"\n    ],\n    \"message\": \"Invalid input: expected string, received object\"\n  },\n  {\n    \"origin\": \"unknown\",\n    \"code\": \"too_small\",\n    \"minimum\": 1,\n    \"inclusive\": true,\n    \"path\": [\n      \"data\",\n      \"workspace\",\n      \"worktree\",\n      \"checkout_path\"\n    ],\n    \"message\": \"Too small: expected unknown to be >=1\"\n  }\n]\n",
+    "status": 1
+  },
+  {
+    "input": "{\"data\":{\"workspace\":{\"worktree\":{\"checkout_path\":{\"length\":[{}]},\"repo_root\":\"/repo\",\"is_linked_worktree\":false}}}}",
+    "stdout": "failed: [\n  {\n    \"expected\": \"string\",\n    \"code\": \"invalid_type\",\n    \"path\": [\n      \"data\",\n      \"workspace\",\n      \"worktree\",\n      \"checkout_path\"\n    ],\n    \"message\": \"Invalid input: expected string, received object\"\n  },\n  {\n    \"origin\": \"unknown\",\n    \"code\": \"too_small\",\n    \"minimum\": 1,\n    \"inclusive\": true,\n    \"path\": [\n      \"data\",\n      \"workspace\",\n      \"worktree\",\n      \"checkout_path\"\n    ],\n    \"message\": \"Too small: expected unknown to be >=1\"\n  }\n]\n",
+    "status": 1
+  },
+  {
+    "input": "{\"data\":{\"workspace\":{\"worktree\":{\"checkout_path\":{\"length\":[{\"toString\":0}]},\"repo_root\":\"/repo\",\"is_linked_worktree\":false}}}}",
+    "stdout": "failed: No default value\n",
+    "status": 1
+  },
+  {
+    "input": "{\"data\":{\"workspace\":{\"worktree\":{\"checkout_path\":{\"length\":{\"toString\":null}},\"repo_root\":\"/repo\",\"is_linked_worktree\":false}}}}",
+    "stdout": "failed: No default value\n",
+    "status": 1
+  },
+  {
+    "input": "{\"data\":{\"workspace\":{\"worktree\":{\"checkout_path\":{\"length\":\"INF\"},\"repo_root\":\"/repo\",\"is_linked_worktree\":false}}}}",
+    "stdout": "failed: [\n  {\n    \"expected\": \"string\",\n    \"code\": \"invalid_type\",\n    \"path\": [\n      \"data\",\n      \"workspace\",\n      \"worktree\",\n      \"checkout_path\"\n    ],\n    \"message\": \"Invalid input: expected string, received object\"\n  },\n  {\n    \"origin\": \"unknown\",\n    \"code\": \"too_small\",\n    \"minimum\": 1,\n    \"inclusive\": true,\n    \"path\": [\n      \"data\",\n      \"workspace\",\n      \"worktree\",\n      \"checkout_path\"\n    ],\n    \"message\": \"Too small: expected unknown to be >=1\"\n  }\n]\n",
+    "status": 1
+  },
+  {
+    "input": "{\"data\":{\"workspace\":{\"worktree\":{\"checkout_path\":{\"length\":\"INFINITY\"},\"repo_root\":\"/repo\",\"is_linked_worktree\":false}}}}",
+    "stdout": "failed: [\n  {\n    \"expected\": \"string\",\n    \"code\": \"invalid_type\",\n    \"path\": [\n      \"data\",\n      \"workspace\",\n      \"worktree\",\n      \"checkout_path\"\n    ],\n    \"message\": \"Invalid input: expected string, received object\"\n  },\n  {\n    \"origin\": \"unknown\",\n    \"code\": \"too_small\",\n    \"minimum\": 1,\n    \"inclusive\": true,\n    \"path\": [\n      \"data\",\n      \"workspace\",\n      \"worktree\",\n      \"checkout_path\"\n    ],\n    \"message\": \"Too small: expected unknown to be >=1\"\n  }\n]\n",
+    "status": 1
+  },
+  {
+    "input": "{\"data\":{\"workspace\":{\"worktree\":{\"checkout_path\":{\"length\":\"+Inf\"},\"repo_root\":\"/repo\",\"is_linked_worktree\":false}}}}",
+    "stdout": "failed: [\n  {\n    \"expected\": \"string\",\n    \"code\": \"invalid_type\",\n    \"path\": [\n      \"data\",\n      \"workspace\",\n      \"worktree\",\n      \"checkout_path\"\n    ],\n    \"message\": \"Invalid input: expected string, received object\"\n  },\n  {\n    \"origin\": \"unknown\",\n    \"code\": \"too_small\",\n    \"minimum\": 1,\n    \"inclusive\": true,\n    \"path\": [\n      \"data\",\n      \"workspace\",\n      \"worktree\",\n      \"checkout_path\"\n    ],\n    \"message\": \"Too small: expected unknown to be >=1\"\n  }\n]\n",
+    "status": 1
+  },
+  {
+    "input": "{\"data\":{\"workspace\":{\"worktree\":{\"checkout_path\":{\"length\":\"-INF\"},\"repo_root\":\"/repo\",\"is_linked_worktree\":false}}}}",
+    "stdout": "failed: [\n  {\n    \"expected\": \"string\",\n    \"code\": \"invalid_type\",\n    \"path\": [\n      \"data\",\n      \"workspace\",\n      \"worktree\",\n      \"checkout_path\"\n    ],\n    \"message\": \"Invalid input: expected string, received object\"\n  },\n  {\n    \"origin\": \"unknown\",\n    \"code\": \"too_small\",\n    \"minimum\": 1,\n    \"inclusive\": true,\n    \"path\": [\n      \"data\",\n      \"workspace\",\n      \"worktree\",\n      \"checkout_path\"\n    ],\n    \"message\": \"Too small: expected unknown to be >=1\"\n  }\n]\n",
+    "status": 1
+  },
+  {
+    "input": "{\"data\":{\"workspace\":{\"worktree\":{\"checkout_path\":{\"length\":\"0x10000000000000000000000000000000000\"},\"repo_root\":\"/repo\",\"is_linked_worktree\":false}}}}",
+    "stdout": "failed: [\n  {\n    \"expected\": \"string\",\n    \"code\": \"invalid_type\",\n    \"path\": [\n      \"data\",\n      \"workspace\",\n      \"worktree\",\n      \"checkout_path\"\n    ],\n    \"message\": \"Invalid input: expected string, received object\"\n  }\n]\n",
+    "status": 1
+  },
+  {
+    "input": "{\"data\":{\"workspace\":{\"worktree\":{\"checkout_path\":{\"length\":[1e999]},\"repo_root\":\"/repo\",\"is_linked_worktree\":false}}}}",
+    "stdout": "failed: [\n  {\n    \"expected\": \"string\",\n    \"code\": \"invalid_type\",\n    \"path\": [\n      \"data\",\n      \"workspace\",\n      \"worktree\",\n      \"checkout_path\"\n    ],\n    \"message\": \"Invalid input: expected string, received object\"\n  }\n]\n",
+    "status": 1
+  },
+  {
+    "input": "a‌b",
+    "stdout": "failed: JSON Parse error: Unexpected identifier \"a‌b\"\n",
+    "status": 1
+  },
+  {
+    "input": "[a‌b]",
+    "stdout": "failed: JSON Parse error: Unexpected identifier \"a‌b\"\n",
+    "status": 1
+  },
+  {
+    "input": "{\"a\":a‌b}",
+    "stdout": "failed: JSON Parse error: Unexpected identifier \"a‌b\"\n",
+    "status": 1
+  },
+  {
+    "input": "a‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌bc",
+    "stdout": "failed: JSON Parse error: Unexpected identifier \"a‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌b...\"\n",
+    "status": 1
+  },
+  {
+    "input": "a‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌",
+    "stdout": "failed: JSON Parse error: Unexpected identifier \"a‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌\"\n",
+    "status": 1
+  },
+  {
+    "input": "a‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌b",
+    "stdout": "failed: JSON Parse error: Unexpected identifier \"a‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌‌...\"\n",
+    "status": 1
+  },
+  {
+    "input": "a‍b",
+    "stdout": "failed: JSON Parse error: Unexpected identifier \"a‍b\"\n",
+    "status": 1
+  },
+  {
+    "input": "[a‍b]",
+    "stdout": "failed: JSON Parse error: Unexpected identifier \"a‍b\"\n",
+    "status": 1
+  },
+  {
+    "input": "{\"a\":a‍b}",
+    "stdout": "failed: JSON Parse error: Unexpected identifier \"a‍b\"\n",
+    "status": 1
+  },
+  {
+    "input": "a‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍bc",
+    "stdout": "failed: JSON Parse error: Unexpected identifier \"a‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍b...\"\n",
+    "status": 1
+  },
+  {
+    "input": "a‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍",
+    "stdout": "failed: JSON Parse error: Unexpected identifier \"a‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍\"\n",
+    "status": 1
+  },
+  {
+    "input": "a‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍b",
+    "stdout": "failed: JSON Parse error: Unexpected identifier \"a‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍‍...\"\n",
+    "status": 1
+  }
+]

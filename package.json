@@ -1,46 +1,29 @@
 {
   "name": "@sebastienelet/herdr-worktree-cleanup",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Conservative linked-worktree cleanup on Herdr workspace closure.",
   "license": "BSD-2-Clause",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/SebastienElet/herdr-worktree-cleanup.git"
   },
-  "files": [
-    "*.ts",
-    "herdr-plugin.toml"
-  ],
-  "os": [
-    "darwin"
-  ],
-  "cpu": [
-    "arm64"
-  ],
   "type": "module",
+  "bin": {
+    "herdr-worktree-cleanup": "bin/herdr-worktree-cleanup.mjs"
+  },
+  "files": ["bin", "LICENSE"],
+  "os": ["darwin"],
+  "cpu": ["arm64"],
+  "optionalDependencies": {
+    "@sebastienelet/herdr-worktree-cleanup-darwin-arm64": "1.0.2"
+  },
+  "engines": { "node": ">=22.14.0" },
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "test": "node --test tests/distribution.test.mjs"
+  },
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org"
-  },
-  "scripts": {
-    "test": "bun --config=/dev/null --no-env-file test",
-    "typecheck": "tsc --noEmit",
-    "lint": "oxlint --type-aware --deny-warnings .",
-    "format": "oxfmt .",
-    "format:check": "oxfmt --check ."
-  },
-  "dependencies": {
-    "zod": "4.6.7"
-  },
-  "devDependencies": {
-    "@types/bun": "1.4.4",
-    "oxfmt": "0.75.0",
-    "oxlint": "1.90.0",
-    "oxlint-tsgolint": "7.0.2005",
-    "typescript": "7.0.2"
-  },
-  "engines": {
-    "bun": "1.4.3"
-  },
-  "packageManager": "bun@1.4.3"
+  }
 }

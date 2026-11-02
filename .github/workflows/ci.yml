@@ -6,29 +6,50 @@ on:
   workflow_dispatch:
 permissions:
   contents: read
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+env:
+  CARGO_TERM_COLOR: always
 
 jobs:
-  typescript:
-    strategy:
-      matrix:
-        os: [macos-26, ubuntu-24.04]
-    runs-on: ${{ matrix.os }}
-    timeout-minutes: 15
+  rust:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
+      - run: cargo fmt --check
+      - run: cargo clippy --all-targets --locked -- -D warnings
+      - run: cargo test --locked
+  macos:
+    runs-on: macos-26
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          bun-version: 1.4.3
-      - run: bun install --frozen-lockfile --ignore-scripts
-      - run: bun run format:check
-      - run: bun run lint
-      - run: bun run typecheck
-      - run: bun test
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24.21.0
+          package-manager-cache: false
+      - run: cargo test --locked
+      - run: npm run build
+      - run: npm test
+  ci:
+    if: always()
+    needs: [rust, macos]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - run: test "$RUST_RESULT" = success && test "$MACOS_RESULT" = success
+        env:
+          RUST_RESULT: ${{ needs.rust.result }}
+          MACOS_RESULT: ${{ needs.macos.result }}
   publish:
     if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main'
-    needs: typescript
+    needs: ci
     runs-on: macos-26
     timeout-minutes: 15
     permissions:
@@ -38,14 +59,24 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
-        with:
-          bun-version: 1.4.3
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: 24.21.0
-          registry-url: https://registry.npmjs.org
           package-manager-cache: false
-      - run: bun install --frozen-lockfile --ignore-scripts
-      - run: bun pm pack --ignore-scripts
-      - run: npm publish ./sebastienelet-herdr-worktree-cleanup-1.0.1.tgz --provenance --access public --registry https://registry.npmjs.org --ignore-scripts
+      - run: npm run build
+      - run: npm test
+      - name: Pack and publish native package then launcher with OIDC provenance
+        run: |
+          mkdir -p dist
+          npm pack ./packages/darwin-arm64 --ignore-scripts --pack-destination dist
+          npm pack --ignore-scripts --pack-destination dist
+          version=$(node -p 'require("./package.json").version')
+          for variant in -darwin-arm64 ''; do
+            package="@sebastienelet/herdr-worktree-cleanup$variant"
+            status=$(curl --silent --show-error --max-time 30 --output /dev/null --write-out '%{http_code}' "https://registry.npmjs.org/${package/\//%2F}/$version")
+            case "$status" in
+              404) npm publish "dist/sebastienelet-herdr-worktree-cleanup$variant-$version.tgz" --provenance --access public --registry https://registry.npmjs.org --ignore-scripts ;;
+              200) echo "$package@$version exists; inspect integrity and provenance before resuming." >&2; exit 1 ;;
+              *) echo "Cannot check $package@$version: HTTP $status" >&2; exit 1 ;;
+            esac
+          done
