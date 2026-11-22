@@ -25,15 +25,66 @@ type RemovalOutcome =
   | Readonly<{ kind: "skipped"; reason: string }>
   | Readonly<{ kind: "failed"; reason: string }>;
 
+const defaultDisposableIgnoredDirectories = [
+  "node_modules",
+  "target",
+  ".moon/cache",
+];
+const disposableIgnoredDirectoriesSchema = z.array(
+  z
+    .string()
+    .refine(
+      (directory) =>
+        !directory.includes("\\") &&
+        !directory.includes("\0") &&
+        directory
+          .split("/")
+          .every((segment) => !["", ".", ".."].includes(segment)),
+      "expected a relative directory without empty, dot or parent segments",
+    ),
+);
+
 function runGit(
   directory: string,
   arguments_: readonly string[],
-): Readonly<{ exitCode: number; stderr: string }> {
+): Readonly<{ exitCode: number; stderr: string; stdout: string }> {
   const result = Bun.spawnSync(["git", "-C", directory, ...arguments_], {
     stderr: "pipe",
-    stdout: "ignore",
+    stdout: "pipe",
   });
-  return { exitCode: result.exitCode, stderr: result.stderr.toString().trim() };
+  return {
+    exitCode: result.exitCode,
+    stderr: result.stderr.toString().trim(),
+    stdout: result.stdout.toString(),
+  };
+}
+
+function ignoredFileProtectionFailure(
+  checkoutPath: string,
+  disposableIgnoredDirectories: readonly string[],
+): string | undefined {
+  const ignored = runGit(checkoutPath, [
+    "ls-files",
+    "--others",
+    "--ignored",
+    "--exclude-standard",
+    "-z",
+    "--",
+    ".",
+    ...disposableIgnoredDirectories.map(
+      (directory) => `:(top,exclude,literal)${directory}/`,
+    ),
+  ]);
+  if (ignored.exitCode !== 0 || ignored.stderr !== "") {
+    return `cannot inspect ignored files: ${ignored.stderr}`;
+  }
+  if (ignored.stdout !== "" && !ignored.stdout.endsWith("\0")) {
+    return "cannot inspect ignored files: incomplete Git output";
+  }
+  const protectedPath = ignored.stdout.split("\0").find((path) => path !== "");
+  return protectedPath === undefined
+    ? undefined
+    : `protected ignored path ${JSON.stringify(protectedPath)}; keep the worktree or explicitly declare its directory disposable`;
 }
 
 function skipped(reason: string): RemovalOutcome {
@@ -61,6 +112,7 @@ function parseWorkspaceClosedEvent(
 function removeClosedWorktree(
   eventJson: string,
   dockerMode: "off" | "stop" = "off",
+  disposableIgnoredDirectories: readonly string[] = defaultDisposableIgnoredDirectories,
 ): RemovalOutcome {
   const parsed = parseWorkspaceClosedEvent(eventJson);
   if (!parsed.ok) {
@@ -77,12 +129,19 @@ function removeClosedWorktree(
   if (!existsSync(checkoutPath)) {
     return skipped("checkout no longer exists");
   }
-  cleanupWorktreeContainers(checkoutPath, dockerMode);
   if (
     runGit(checkoutPath, ["symbolic-ref", "--quiet", "HEAD"]).exitCode !== 0
   ) {
     return skipped("checkout HEAD is detached and its commits would be lost");
   }
+  const protectionFailure = ignoredFileProtectionFailure(
+    checkoutPath,
+    disposableIgnoredDirectories,
+  );
+  if (protectionFailure !== undefined) {
+    return { kind: "failed", reason: protectionFailure };
+  }
+  cleanupWorktreeContainers(checkoutPath, dockerMode);
   const removal = runGit(worktree.repo_root, [
     "-c",
     "status.showUntrackedFiles=all",
@@ -95,11 +154,44 @@ function removeClosedWorktree(
     : { kind: "failed", reason: removal.stderr };
 }
 
-if (import.meta.main) {
-  const outcome = removeClosedWorktree(
+function removeFromCommandLine(): RemovalOutcome {
+  const optionName = "--disposable-ignored-directories=";
+  const options = Bun.argv.filter((argument) =>
+    argument.startsWith("--disposable-ignored-directories"),
+  );
+  const [option] = options;
+  if (
+    options.length > 1 ||
+    (option !== undefined && !option.startsWith(optionName))
+  ) {
+    return {
+      kind: "failed",
+      reason:
+        "invalid disposable ignored directories: use one JSON array option",
+    };
+  }
+  let directories = defaultDisposableIgnoredDirectories;
+  try {
+    if (option !== undefined) {
+      directories = disposableIgnoredDirectoriesSchema.parse(
+        JSON.parse(option.slice(optionName.length)),
+      );
+    }
+  } catch (error) {
+    return {
+      kind: "failed",
+      reason: `invalid disposable ignored directories: ${error instanceof Error ? error.message : String(error)}`,
+    };
+  }
+  return removeClosedWorktree(
     process.env.HERDR_PLUGIN_EVENT_JSON ?? "",
     Bun.argv.includes("--docker-cleanup=stop") ? "stop" : "off",
+    directories,
   );
+}
+
+if (import.meta.main) {
+  const outcome = removeFromCommandLine();
   const message =
     outcome.kind === "removed"
       ? `removed ${outcome.checkoutPath}`

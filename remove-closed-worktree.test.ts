@@ -1,85 +1,24 @@
 import { afterEach, expect, test } from "bun:test";
+import { dirname, join } from "node:path";
 import {
   existsSync,
-  mkdtempSync,
+  mkdirSync,
   readFileSync,
   readlinkSync,
   rmSync,
   symlinkSync,
   writeFileSync,
 } from "node:fs";
-import { join } from "node:path";
+import {
+  git,
+  removeTemporaryRepositories,
+  repositoryWithLinkedWorktree,
+  workspaceClosedEvent,
+  writeIgnoredFile,
+} from "./worktree-test-support.ts";
 import { removeClosedWorktree } from "./remove-closed-worktree.ts";
-import { tmpdir } from "node:os";
 
-const temporaryRoots: string[] = [];
-
-afterEach(() => {
-  for (const root of temporaryRoots.splice(0)) {
-    rmSync(root, { force: true, recursive: true });
-  }
-});
-
-function git(directory: string, ...arguments_: readonly string[]): string {
-  const result = Bun.spawnSync(
-    [
-      "git",
-      "-c",
-      "user.email=test@example.com",
-      "-c",
-      "user.name=Test",
-      "-C",
-      directory,
-      ...arguments_,
-    ],
-    { stderr: "pipe", stdout: "pipe" },
-  );
-  expect(result.exitCode).toBe(0);
-  return result.stdout.toString().trim();
-}
-
-function repositoryWithLinkedWorktree(): Readonly<{
-  checkoutPath: string;
-  repositoryRoot: string;
-}> {
-  const root = mkdtempSync(join(tmpdir(), "herdr-worktree-cleanup-"));
-  temporaryRoots.push(root);
-  const repositoryRoot = join(root, "repository");
-  const checkoutPath = join(root, "checkout");
-  expect(
-    Bun.spawnSync(["git", "init", "-q", "-b", "main", repositoryRoot]).exitCode,
-  ).toBe(0);
-  git(repositoryRoot, "commit", "-q", "--allow-empty", "-m", "initial");
-  git(repositoryRoot, "worktree", "add", "-q", "-b", "feature", checkoutPath);
-  return { checkoutPath, repositoryRoot };
-}
-
-function workspaceClosedEvent(
-  worktree: Readonly<{
-    checkoutPath: string;
-    isLinkedWorktree: boolean;
-    repositoryRoot: string;
-  }>,
-): string {
-  return JSON.stringify({
-    event: "workspace_closed",
-    data: {
-      type: "workspace_closed",
-      workspace_id: "w1",
-      workspace: {
-        workspace_id: "w1",
-        label: "feature",
-        worktree: {
-          checkout_path: worktree.checkoutPath,
-          is_linked_worktree: worktree.isLinkedWorktree,
-          repo_key: `${worktree.repositoryRoot}/.git`,
-          repo_name: "repository",
-          repo_root: worktree.repositoryRoot,
-        },
-      },
-    },
-  });
-}
+afterEach(removeTemporaryRepositories);
 
 test.each(["normal", "no"])(
   "removes a clean checkout and keeps its branch with status.showUntrackedFiles=%s",
@@ -133,6 +72,11 @@ test("fails and preserves a locked checkout used by a deployed link", () => {
   writeFileSync(source, "fixture skill\n");
   git(checkoutPath, "add", "skill.md");
   git(checkoutPath, "commit", "-q", "-m", "fixture skill");
+  writeIgnoredFile(
+    { checkoutPath, repositoryRoot },
+    "target/cache.txt",
+    "target/",
+  );
   symlinkSync(source, deployedLink);
   git(
     repositoryRoot,
@@ -160,28 +104,36 @@ test("fails and preserves a locked checkout used by a deployed link", () => {
   );
 });
 
-test("removes ignored files along with an otherwise clean checkout", () => {
-  const { checkoutPath, repositoryRoot } = repositoryWithLinkedWorktree();
-  git(repositoryRoot, "config", "status.showUntrackedFiles", "no");
-  writeFileSync(
-    join(repositoryRoot, ".git", "info", "exclude"),
-    "ignored-notes.txt\n",
-  );
-  writeFileSync(
-    join(checkoutPath, "ignored-notes.txt"),
-    "disposable ignored notes\n",
-  );
+test("preserves modified tracked files alongside disposable caches", () => {
+  const worktree = repositoryWithLinkedWorktree();
+  const tracked = join(worktree.checkoutPath, "tracked.txt");
+  writeFileSync(tracked, "committed\n");
+  git(worktree.checkoutPath, "add", "tracked.txt");
+  git(worktree.checkoutPath, "commit", "-qm", "tracked fixture");
+  writeFileSync(tracked, "local changes\n");
+  const cache = writeIgnoredFile(worktree, "target/cache.txt", "target/");
 
   const outcome = removeClosedWorktree(
-    workspaceClosedEvent({
-      checkoutPath,
-      isLinkedWorktree: true,
-      repositoryRoot,
-    }),
+    workspaceClosedEvent({ ...worktree, isLinkedWorktree: true }),
   );
 
-  expect(outcome).toEqual({ kind: "removed", checkoutPath });
-  expect(existsSync(checkoutPath)).toBe(false);
+  expect(outcome.kind).toBe("failed");
+  expect(readFileSync(tracked, "utf8")).toBe("local changes\n");
+  expect(readFileSync(cache, "utf8")).toBe("fixture contents\n");
+});
+
+test("preserves non-ignored files inside a disposable directory", () => {
+  const worktree = repositoryWithLinkedWorktree();
+  const notes = join(worktree.checkoutPath, "node_modules", "notes.txt");
+  mkdirSync(dirname(notes));
+  writeFileSync(notes, "untracked contents\n");
+
+  const outcome = removeClosedWorktree(
+    workspaceClosedEvent({ ...worktree, isLinkedWorktree: true }),
+  );
+
+  expect(outcome.kind).toBe("failed");
+  expect(readFileSync(notes, "utf8")).toBe("untracked contents\n");
 });
 
 test("the plugin entry point reports hidden untracked files with a failing exit", () => {
