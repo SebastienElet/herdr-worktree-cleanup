@@ -4,6 +4,7 @@ import { mkdtempSync, mkdirSync, copyFileSync, writeFileSync, chmodSync, rmSync,
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { spawnSync } from 'node:child_process';
+import { fileURLToPath } from 'node:url';
 
 const root = new URL('../', import.meta.url);
 const supported = process.platform === 'darwin' && process.arch === 'arm64';
@@ -74,8 +75,8 @@ if (supported) test('packed npm packages install offline and execute the native 
     assert.equal(result.status, 0, result.stderr);
     return result.stdout;
   }
-  const native = JSON.parse(run('npm', ['pack', new URL('packages/darwin-arm64', root).pathname, '--ignore-scripts', '--json', '--pack-destination', directory]))[0].filename;
-  const entry = JSON.parse(run('npm', ['pack', root.pathname, '--ignore-scripts', '--json', '--pack-destination', directory]))[0].filename;
+  const native = JSON.parse(run('npm', ['pack', fileURLToPath(new URL('packages/darwin-arm64', root)), '--ignore-scripts', '--json', '--pack-destination', directory]))[0].filename;
+  const entry = JSON.parse(run('npm', ['pack', fileURLToPath(root), '--ignore-scripts', '--json', '--pack-destination', directory]))[0].filename;
   run('npm', ['install', '--offline', '--ignore-scripts', '--package-lock=false', '--no-audit', '--no-fund', join(directory, native), join(directory, entry)]);
   const env = { ...process.env, HERDR_PLUGIN_EVENT_JSON: '{"data":{}}' };
   assert.equal(run(join(directory, 'node_modules/.bin/herdr-worktree-cleanup'), [], { env }), 'skipped: event carries no worktree snapshot\n');

@@ -1,6 +1,6 @@
 [package]
 name = "herdr-worktree-cleanup"
-version = "1.0.2"
+version = "1.0.4"
 edition = "2024"
 license = "BSD-2-Clause"
 description = "Conservative linked-worktree cleanup on Herdr workspace closure"

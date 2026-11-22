@@ -171,6 +171,28 @@ fn tracked_changes_survive_staged_or_unstaged() {
 }
 
 #[test]
+fn disposable_directories_do_not_exempt_tracked_or_non_ignored_changes() {
+    let repo = Repository::new();
+    let tracked = repo.checkout.join("tracked.txt");
+    fs::write(&tracked, "committed\n").unwrap();
+    git(&repo.checkout, &["add", "tracked.txt"]);
+    git(&repo.checkout, &["commit", "-qm", "tracked"]);
+    fs::write(&tracked, "modified\n").unwrap();
+    let cache = repo.ignored_file("node_modules/cache.txt", "node_modules/");
+    assert_failed(&repo.invoke(), "failed: ");
+    assert_eq!(fs::read_to_string(tracked).unwrap(), "modified\n");
+    assert_eq!(fs::read_to_string(cache).unwrap(), "fixture contents\n");
+
+    let repo = Repository::new();
+    let cache = repo.ignored_file("target/cache.txt", "target/cache.txt");
+    let notes = repo.checkout.join("target/notes.txt");
+    fs::write(&notes, "untracked notes\n").unwrap();
+    assert_failed(&repo.invoke(), "failed: ");
+    assert_eq!(fs::read_to_string(notes).unwrap(), "untracked notes\n");
+    assert_eq!(fs::read_to_string(cache).unwrap(), "fixture contents\n");
+}
+
+#[test]
 fn locked_checkout_and_deployed_symlink_survive() {
     let repo = Repository::new();
     let source = repo.checkout.join("skill.md");
@@ -197,29 +219,296 @@ fn locked_checkout_and_deployed_symlink_survive() {
     repo.branch_survives();
 }
 
+impl Repository {
+    fn ignored_file(&self, relative: &str, pattern: &str) -> PathBuf {
+        use std::io::Write;
+
+        let mut exclude = fs::OpenOptions::new()
+            .append(true)
+            .open(self.repository.join(".git/info/exclude"))
+            .unwrap();
+        writeln!(exclude, "{pattern}").unwrap();
+        let path = self.checkout.join(relative);
+        fs::create_dir_all(path.parent().unwrap()).unwrap();
+        fs::write(&path, "fixture contents\n").unwrap();
+        path
+    }
+}
+
+fn assert_failed(output: &Output, prefix: &str) {
+    assert_eq!(output.status.code(), Some(1), "{output:?}");
+    assert!(
+        String::from_utf8_lossy(&output.stdout).starts_with(prefix),
+        "{output:?}"
+    );
+    assert!(output.stderr.is_empty(), "{output:?}");
+}
+
 #[test]
-fn ignored_files_disappear_with_an_otherwise_clean_checkout() {
+fn protected_ignored_paths_keep_their_contents() {
+    for relative in [
+        "ignored-notes.txt",
+        "protected/notes.txt",
+        "node_modules-backup/notes.txt",
+        "target-backup/notes.txt",
+        ".moon/notes.txt",
+        "packages/app/node_modules/notes.txt",
+        "protected/notes \nü.txt",
+        "node_modules",
+        "target",
+        ".moon/cache",
+    ] {
+        let repo = Repository::new();
+        git(
+            &repo.repository,
+            &["config", "status.showUntrackedFiles", "no"],
+        );
+        let path = repo.ignored_file(relative, "*");
+        assert_failed(&repo.invoke(), "failed: protected ignored path ");
+        assert_eq!(fs::read_to_string(path).unwrap(), "fixture contents\n");
+    }
+}
+
+#[test]
+fn inherited_git_worktree_does_not_redirect_the_ignored_file_check() {
     let repo = Repository::new();
+    let notes = repo.ignored_file("ignored-notes.txt", "ignored-notes.txt");
+    let output = command(&repo.event().to_string(), &[])
+        .env("GIT_WORK_TREE", &repo.repository)
+        .output()
+        .unwrap();
+    assert_failed(&output, "failed: protected ignored path ");
+    assert_eq!(fs::read_to_string(notes).unwrap(), "fixture contents\n");
+}
+
+#[test]
+fn relative_event_path_cannot_inspect_and_remove_different_worktrees() {
+    let repo = Repository::new();
+    let relative = "checkout with spaces";
+    let other_checkout = repo.repository.join(relative);
     git(
         &repo.repository,
-        &["config", "status.showUntrackedFiles", "no"],
+        &[
+            "worktree",
+            "add",
+            "-qb",
+            "other",
+            other_checkout.to_str().unwrap(),
+        ],
     );
     fs::write(
         repo.repository.join(".git/info/exclude"),
         "ignored-notes.txt\n",
     )
     .unwrap();
-    fs::write(
-        repo.checkout.join("ignored-notes.txt"),
-        "disposable ignored notes\n",
-    )
-    .unwrap();
-    assert_result(
-        &repo.invoke(),
-        0,
-        &format!("removed {}\n", repo.checkout.display()),
+    let notes = other_checkout.join("ignored-notes.txt");
+    fs::write(&notes, "preserve this").unwrap();
+
+    let mut event = repo.event();
+    event["data"]["workspace"]["worktree"]["checkout_path"] = json!(relative);
+    let output = command(&event.to_string(), &[])
+        .current_dir(repo.checkout.parent().unwrap())
+        .output()
+        .unwrap();
+    assert_failed(&output, "failed: checkout path must be absolute");
+    assert_eq!(fs::read_to_string(notes).unwrap(), "preserve this");
+    assert!(repo.checkout.exists());
+}
+
+#[test]
+fn default_disposable_directories_are_removed_and_the_branch_is_kept() {
+    for directory in ["node_modules", "target", ".moon/cache"] {
+        let repo = Repository::new();
+        repo.ignored_file(&format!("{directory}/cache.txt"), &format!("{directory}/"));
+        assert_result(
+            &repo.invoke(),
+            0,
+            &format!("removed {}\n", repo.checkout.display()),
+        );
+        assert!(!repo.checkout.exists());
+        repo.branch_survives();
+    }
+}
+
+#[test]
+fn protected_data_preserves_disposable_caches_and_prevents_docker_cleanup() {
+    let repo = Repository::new();
+    let cache = repo.ignored_file("node_modules/cache.txt", "node_modules/");
+    let notes = repo.ignored_file("protected/notes.txt", "protected/");
+    let (output, log) = docker(&repo, "--docker-cleanup=stop", "aaaaaaaaaaaa", "0", "0", "");
+    assert_failed(&output, "failed: protected ignored path ");
+    assert!(log.is_empty(), "{log:?}");
+    for path in [cache, notes] {
+        assert_eq!(fs::read_to_string(path).unwrap(), "fixture contents\n");
+    }
+}
+
+#[test]
+fn a_symlink_named_like_a_disposable_directory_is_protected() {
+    let repo = Repository::new();
+    let link = repo.ignored_file("node_modules", "node_modules");
+    fs::remove_file(&link).unwrap();
+    let target = repo.repository.join("external.txt");
+    fs::write(&target, "external contents").unwrap();
+    std::os::unix::fs::symlink(&target, &link).unwrap();
+    assert_failed(&repo.invoke(), "failed: protected ignored path ");
+    assert_eq!(fs::read_link(link).unwrap(), target);
+    assert_eq!(fs::read_to_string(target).unwrap(), "external contents");
+}
+
+#[test]
+fn repository_and_global_ignore_rules_protect_files() {
+    for global in [false, true] {
+        let repo = Repository::new();
+        if global {
+            let rules = repo.repository.join("global-ignore");
+            fs::write(&rules, "protected/\n").unwrap();
+            git(
+                &repo.repository,
+                &["config", "core.excludesFile", rules.to_str().unwrap()],
+            );
+        } else {
+            fs::write(repo.checkout.join(".gitignore"), "protected/\n").unwrap();
+            git(&repo.checkout, &["add", ".gitignore"]);
+            git(&repo.checkout, &["commit", "-qm", "ignore fixture data"]);
+        }
+        let folder = repo.checkout.join("protected");
+        fs::create_dir(&folder).unwrap();
+        let notes = folder.join("notes.txt");
+        fs::write(&notes, "protected contents").unwrap();
+        git(&repo.checkout, &["check-ignore", "protected/notes.txt"]);
+        assert_failed(&repo.invoke(), "failed: protected ignored path ");
+        assert_eq!(fs::read_to_string(notes).unwrap(), "protected contents");
+    }
+}
+
+#[test]
+fn unreadable_ignore_rules_or_directory_fail_closed() {
+    use std::os::unix::fs::PermissionsExt;
+
+    let repo = Repository::new();
+    let notes = repo.ignored_file("notes.txt", "notes.txt");
+    git(
+        &repo.repository,
+        &[
+            "config",
+            "core.excludesFile",
+            repo.repository.to_str().unwrap(),
+        ],
     );
-    assert!(!repo.checkout.exists());
+    assert_failed(&repo.invoke(), "failed: cannot inspect ignored files");
+    assert_eq!(fs::read_to_string(notes).unwrap(), "fixture contents\n");
+
+    let repo = Repository::new();
+    let notes = repo.ignored_file("protected/notes.txt", "protected/");
+    let folder = notes.parent().unwrap();
+    let permissions = fs::metadata(folder).unwrap().permissions();
+    fs::set_permissions(folder, fs::Permissions::from_mode(0o000)).unwrap();
+    let result = command(&repo.event().to_string(), &[]).output();
+    fs::set_permissions(folder, permissions).unwrap();
+    assert_failed(&result.unwrap(), "failed: cannot inspect ignored files");
+    assert_eq!(fs::read_to_string(notes).unwrap(), "fixture contents\n");
+}
+
+#[test]
+fn incomplete_or_failed_git_inspection_preserves_the_checkout() {
+    use std::os::unix::fs::PermissionsExt;
+
+    for (reply, diagnostic) in [
+        ("printf 'protected.txt'", "incomplete Git output"),
+        ("exit 42", "exit status: 42"),
+    ] {
+        let repo = Repository::new();
+        let notes = repo.ignored_file("protected.txt", "protected.txt");
+        let bin = repo._root.path().join("bin");
+        fs::create_dir(&bin).unwrap();
+        let git = bin.join("git");
+        fs::write(&git, format!("#!/bin/sh\nif [ \"$5\" = ls-files ]; then\n{reply}\nexit 0\nfi\nexec /usr/bin/git \"$@\"\n")).unwrap();
+        fs::set_permissions(&git, fs::Permissions::from_mode(0o755)).unwrap();
+        let output = command(&repo.event().to_string(), &[])
+            .env("PATH", bin)
+            .output()
+            .unwrap();
+        assert_failed(&output, "failed: cannot inspect ignored files");
+        assert!(
+            String::from_utf8_lossy(&output.stdout).contains(diagnostic),
+            "{output:?}"
+        );
+        assert_eq!(fs::read_to_string(notes).unwrap(), "fixture contents\n");
+    }
+}
+
+#[test]
+fn custom_disposable_directories_are_literal_and_replace_defaults() {
+    for directory in ["build/cache", "cache with spaces"] {
+        let repo = Repository::new();
+        repo.ignored_file(
+            &format!("{directory}/artifact.txt"),
+            &format!("{directory}/"),
+        );
+        let option = format!("--disposable-ignored-directories={}", json!([directory]));
+        assert_result(
+            &invoke(&repo.event().to_string(), &[&option]),
+            0,
+            &format!("removed {}\n", repo.checkout.display()),
+        );
+        assert!(!repo.checkout.exists());
+    }
+    for (directories, relative) in [
+        (r#"["*"]"#, "protected/notes.txt"),
+        (r#"[":(glob)**"]"#, "protected/notes.txt"),
+        ("[]", "node_modules/cache.txt"),
+        (r#"["build/cache"]"#, "node_modules/cache.txt"),
+    ] {
+        let repo = Repository::new();
+        let file = repo.ignored_file(relative, "*");
+        let option = format!("--disposable-ignored-directories={directories}");
+        assert_failed(
+            &invoke(&repo.event().to_string(), &[&option]),
+            "failed: protected ignored path ",
+        );
+        assert_eq!(fs::read_to_string(file).unwrap(), "fixture contents\n");
+    }
+}
+
+#[test]
+fn invalid_disposable_directory_configuration_refuses_removal() {
+    let repo = Repository::new();
+    let event = repo.event().to_string();
+    for value in [
+        "invalid-json",
+        "null",
+        r#"["."]"#,
+        r#"["../protected"]"#,
+        r#"["/tmp/cache"]"#,
+        r#"["cache//nested"]"#,
+        r#"["cache/../protected"]"#,
+        r#"["cache\\nested"]"#,
+        r#"["cache\u0000nested"]"#,
+        r#"[""]"#,
+        r#"[1]"#,
+        r#"["cache/"]"#,
+    ] {
+        let option = format!("--disposable-ignored-directories={value}");
+        assert_failed(
+            &invoke(&event, &[&option]),
+            "failed: invalid disposable ignored directories",
+        );
+        assert!(repo.checkout.exists());
+    }
+    for args in [
+        &["--disposable-ignored-directories"][..],
+        &[
+            "--disposable-ignored-directories=[]",
+            "--disposable-ignored-directories=[\"target\"]",
+        ][..],
+    ] {
+        assert_failed(
+            &invoke(&event, args),
+            "failed: invalid disposable ignored directories",
+        );
+        assert!(repo.checkout.exists());
+    }
 }
 
 #[test]
@@ -502,7 +791,7 @@ fn docker_timeout_kills_and_reaps_the_command_then_removes_checkout() {
 }
 
 #[test]
-fn docker_still_runs_before_git_refuses_dirty_locked_or_detached_checkouts() {
+fn docker_runs_after_head_check_and_before_git_refuses_dirty_or_locked_checkouts() {
     for state in ["dirty", "locked", "detached"] {
         let repo = Repository::new();
         match state {
@@ -522,13 +811,17 @@ fn docker_still_runs_before_git_refuses_dirty_locked_or_detached_checkouts() {
             output.status.code(),
             Some(if state == "detached" { 0 } else { 1 })
         );
-        assert_eq!(
-            log,
-            format!(
-                "{}[stop]\n[--timeout]\n[10]\n[aaaaaaaaaaaa]\n\n",
-                listed(&repo)
-            )
-        );
+        if state == "detached" {
+            assert!(log.is_empty(), "{log:?}");
+        } else {
+            assert_eq!(
+                log,
+                format!(
+                    "{}[stop]\n[--timeout]\n[10]\n[aaaaaaaaaaaa]\n\n",
+                    listed(&repo)
+                )
+            );
+        }
         assert!(repo.checkout.exists());
     }
 }

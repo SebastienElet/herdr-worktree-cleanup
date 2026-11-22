@@ -1,3 +1,4 @@
+use crate::diagnostics::{invalid_type, issues};
 use crate::json::{Document, Value};
 use serde_json::json;
 
@@ -13,7 +14,7 @@ pub fn parse(input: &str) -> Result<Option<Worktree>, String> {
     let mut path = Vec::new();
     for (key, optional) in [("data", false), ("workspace", true), ("worktree", true)] {
         if !matches!(current, Some(Value::Object(_))) {
-            return Err(issues(vec![invalid_type("object", current, &path)]));
+            return Err(issues(vec![invalid_type("object", current, json!(path))]));
         }
         current = document.property(current.unwrap(), key);
         path.push(key);
@@ -22,7 +23,7 @@ pub fn parse(input: &str) -> Result<Option<Worktree>, String> {
         }
     }
     if !matches!(current, Some(Value::Object(_))) {
-        return Err(issues(vec![invalid_type("object", current, &path)]));
+        return Err(issues(vec![invalid_type("object", current, json!(path))]));
     }
     let worktree = current.unwrap();
     let mut errors = Vec::new();
@@ -35,7 +36,7 @@ pub fn parse(input: &str) -> Result<Option<Worktree>, String> {
         let mut field_path = path.clone();
         field_path.push(key);
         if value.map(Value::kind) != Some(expected) {
-            errors.push(invalid_type(expected, value, &field_path));
+            errors.push(invalid_type(expected, value, json!(field_path)));
         }
         if expected == "string" {
             let origin = match value {
@@ -78,13 +79,4 @@ pub fn parse(input: &str) -> Result<Option<Worktree>, String> {
         is_linked_worktree: *is_linked_worktree,
         repo_root: repo_root.clone(),
     }))
-}
-
-fn invalid_type(expected: &str, value: Option<&Value>, path: &[&str]) -> serde_json::Value {
-    let received = value.map_or("undefined", Value::kind);
-    json!({"expected":expected, "code":"invalid_type", "path":path, "message":format!("Invalid input: expected {expected}, received {received}")})
-}
-
-fn issues(errors: Vec<serde_json::Value>) -> String {
-    serde_json::to_string_pretty(&errors).unwrap()
 }

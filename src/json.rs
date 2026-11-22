@@ -66,6 +66,13 @@ impl Document {
         }
     }
 
+    pub fn elements(&self, value: &Value) -> Option<impl Iterator<Item = &Value>> {
+        let Value::Array(items) = value else {
+            return None;
+        };
+        Some(items.iter().map(|id| &self.values[*id]))
+    }
+
     pub fn number(&self, value: &Value) -> Result<f64, String> {
         match value {
             Value::Null => Ok(0.0),
