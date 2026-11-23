@@ -1,0 +1,57 @@
+name: Dependabot automerge
+on:
+  workflow_run:
+    workflows: [Checks and publication]
+    types: [completed]
+
+permissions: {}
+
+jobs:
+  automerge:
+    if: >-
+      github.event.workflow_run.event == 'pull_request' &&
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.path == '.github/workflows/ci.yml' &&
+      github.event.workflow_run.head_repository.id == github.event.repository.id
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      actions: read
+      pull-requests: read
+      contents: write
+    steps:
+      - name: Squash the validated Dependabot PR
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_ID: ${{ github.event.workflow_run.id }}
+          RUN_ATTEMPT: ${{ github.event.workflow_run.run_attempt }}
+          HEAD_BRANCH: ${{ github.event.workflow_run.head_branch }}
+          HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
+        run: |
+          pr_number=$(gh api --paginate "repos/$GITHUB_REPOSITORY/actions/runs/$RUN_ID/attempts/$RUN_ATTEMPT/jobs" |
+            jq -sr '
+              [.[].jobs[] | select(.name == "ci" and .conclusion == "success")
+              | .steps[] | select(.conclusion == "success")
+              | .name | capture("^Validated main pull request #(?<number>[1-9][0-9]*)$").number]
+              | if length > 1 then error("Multiple validated pull requests") else .[] end
+            ')
+          if [[ -z "$pr_number" ]]; then
+            echo "This run did not validate a pull request targeting main."
+            exit 0
+          fi
+
+          eligible=$(gh api "repos/$GITHUB_REPOSITORY/pulls/$pr_number" |
+            jq --arg sha "$HEAD_SHA" --arg branch "$HEAD_BRANCH" --argjson repo "$GITHUB_REPOSITORY_ID" '
+              .state == "open" and .draft == false and .base.ref == "main" and
+              .user.login == "dependabot[bot]" and .head.repo.id == $repo and
+              .head.ref == $branch and .head.sha == $sha
+            ')
+          if [[ "$eligible" != true ]]; then
+            echo "The validated commit no longer matches an eligible Dependabot PR."
+            exit 0
+          fi
+
+          gh api --method PUT "repos/$GITHUB_REPOSITORY/pulls/$pr_number/merge" \
+            -f merge_method=squash -f sha="$HEAD_SHA" |
+            jq -e '.merged == true'

@@ -47,6 +47,9 @@ jobs:
         env:
           RUST_RESULT: ${{ needs.rust.result }}
           MACOS_RESULT: ${{ needs.macos.result }}
+      - name: "Validated main pull request #${{ github.event.pull_request.number }}"
+        if: github.event_name == 'pull_request' && github.base_ref == 'main'
+        run: "true"
   publish:
     if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main'
     needs: ci
