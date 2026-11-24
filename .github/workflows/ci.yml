@@ -78,7 +78,7 @@ jobs:
             package="@sebastienelet/herdr-worktree-cleanup$variant"
             status=$(curl --silent --show-error --max-time 30 --output /dev/null --write-out '%{http_code}' "https://registry.npmjs.org/${package/\//%2F}/$version")
             case "$status" in
-              404) npm publish "dist/sebastienelet-herdr-worktree-cleanup$variant-$version.tgz" --provenance --access public --registry https://registry.npmjs.org --ignore-scripts ;;
+              404) npm publish "./dist/sebastienelet-herdr-worktree-cleanup$variant-$version.tgz" --provenance --access public --registry https://registry.npmjs.org --ignore-scripts ;;
               200) echo "$package@$version exists; inspect integrity and provenance before resuming." >&2; exit 1 ;;
               *) echo "Cannot check $package@$version: HTTP $status" >&2; exit 1 ;;
             esac
